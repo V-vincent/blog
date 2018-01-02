@@ -1,0 +1,60 @@
+/*复位样式*/
+*{  margin:0;  padding: 0;}
+li{list-style: none;}
+/*公共样式*/
+body{background: #ededef;}
+img{width: 45%;}
+/*页面样式*/
+/*导航样式*/
+.nav_box{ height: 80px; margin-bottom: 30px;background: #444;border: 0;border-radius: 0; }
+.nav_box .col-md-2 h1{  margin: 0; line-height: 80px;color: #fff}
+.nav_box .nav_list{height: 80px;}
+.nav_box .nav_list .nav li a{color: #999;line-height: 70px;padding:10px 18px 0;font-size: 16px;background: inherit;}
+.nav_box .nav_list .nav li a:hover{border-radius: 0;color: #fff;background: inherit;}
+.nav_box .nav_list .nav li a.cur{color: #fff;}
+.nav_box .nav_list .nav li .pull-down-box{border-radius: 0;padding: 0;}
+.nav_box .nav_list .nav li .pull-down-box li{border-bottom: 1px solid #0c0c0c;  background-color: #191919;padding: 0;}
+.nav_box .nav_list .nav li .pull-down-box li a{width: 15%;  padding: 0 15px;  color: #bcbcbc;
+    line-height: 35px;  font-size: 12px;  text-align: left;margin: 0;}
+.nav_box .nav_list .nav li .pull-down-box li a:hover{color: #fff;}
+.nav_box .nav_list .nav li .pull-down-box li:hover{background: #444;}
+
+
+/*左边微博的样式*/
+.pub_mes{height: 110px;background: #fff; margin: 0;padding: 0;}
+.pub_menu{border: 1px solid #ccc;margin: 0;}
+.pub_menu .pub_avatar img{width: 120px;height: 110px;margin-left: -15px;}
+.pub_menu .pub_type{font-size: 40px;text-align: center;margin-top: 15px;}
+.pub_menu .pub_type span{cursor: pointer;}
+.pub_menu .pub_type span:hover{color: #7594B3;}
+.pub_menu .pub_type p{font-size: 20px;cursor: pointer;}
+
+/*发布框的样式*/
+.pub_box{width: 650px;height: auto;background: #fff;border: 1px solid #ccc;
+    position: absolute;top: 0;left: 110px;  z-index: 9;text-align: left;}
+.pub_content_box{padding: 15px;}
+.pub_content_box input{margin: 10px 0;}
+
+/*微博内容的样式*/
+.blog_list{margin: 20px 0 0 0;}
+.blog_avatar{padding-left: 30px;}
+.blog_avatar img{width: 90%;}
+.blog_content_list{border: 1px solid #ccc;background: #fff;padding: 0;
+	overflow: hidden;}
+.blog_content{padding: 18px 20px;box-sizing: border-box;overflow: hidden;}
+.blog_content img{float: left;}
+.blog_content>div{float: left;margin-left: 20px;}
+.blog_content_btn a{margin-right: 15px;}
+/* 标签样式 */
+.tag_content{margin:10px 0 0 20px;}
+.tag_content span{cursor: pointer;}
+
+/* 编辑微博内容的样式 */
+.edit_blog input{margin: 10px 0;}
+
+/* 评论样式 */
+.comment_box{width: 100%;border: 1px solid #ccc;overflow: hidden;padding: 10px 30px;background: #fafafa;}
+.comment_input{    float: left;width: 85%;padding: 7px;line-height: 20px;overflow: hidden;border: 1px solid #cececf;
+    outline: none;}
+/*个人中心样式*/
+.my_center{width: 100%;height: 300px;background: #f3f3f3;overflow: hidden;border: 1px solid #dfdfdf;padding: 10px}

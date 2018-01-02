@@ -1,0 +1,71 @@
+<style>	
+.left_box{width: 100%}
+.comment_btn{margin:0 20px 10px 0;float: right;}
+.comment_box{display: none;width: 100%;border: 1px #ccc solid;padding: 10px 15px;overflow: hidden;}
+.show_comment{display: block;}
+.comment_content{float: left;width: 88%;}
+.comment_pub{float: right;}
+.comment_list li{margin: 5px 0;overflow: hidden;}
+.comment_list li p{float: left;line-height: 34px;margin: 0;}
+.comment_list li button{float: right;margin: 0 5px;}
+/* 按钮样式 */
+.left_box button{padding: 6px 12px;font-size: 14px;line-height: 20px;}
+</style>
+
+<template id="comment_html">
+	<div class="left_box">
+		<el-button class="comment_btn" @click.native="show_comment_box(info)" type="primary">评论</el-button>		
+		<div class="comment_box" v-bind:class="{'show_comment':info.comment_open}" >
+			<div style="overflow: hidden;">
+				<el-input suffix-icon="el-icon-more" class="comment_content" v-model="info.temp_comment_content"	@keyup.enter.native="send_comment(info)"></el-input>
+				<el-button type="success" class="comment_pub" @click="send_comment(info)">发布</el-button>
+			</div>
+		 	<ul class="comment_list">
+		 		<li v-for="comment in info.comment_list">
+		 			<p>{{comment}}</p>	
+		 			<el-button @click="delete_comment(info,comment)" type="danger">删除</el-button>
+		 			<el-button  type="primary">回复</el-button>
+		 		</li>
+		 	</ul>						
+		</div>
+	</div>
+</template>
+<script type="text/javascript">
+// 全局组件
+// 写new Vue的前面
+// 错误提醒、成功提醒、警告提醒
+// slot 插槽，接收自定义组件，盒子里面的内容或html节点
+// props  父组件的数据需要通过 prop 才能下发到子组件中
+Vue.component('vincent-comment',{
+	template:'#comment_html',
+	props:["info"],
+	methods: {
+		//显示评论框
+		show_comment_box: function(info) {
+			info.comment_open = !info.comment_open;
+		},
+		//发布评论
+		send_comment: function(info) {
+			info.comment_list.push(info.temp_comment_content);
+			info.temp_comment_content = ''
+			// 保存评论
+			$.post("update.php", {
+				info: JSON.stringify(this.info)
+			}, (rtnData) => {
+
+			})
+		},
+		//删除评论
+		delete_comment: function(info, comment) {
+			// 评论是哪一个微博的？
+			var cur_delete_comment_index = info.comment_list.indexOf(comment)
+			info.comment_list.splice(cur_delete_comment_index, 1)
+			$.post("update.php", {
+				info: JSON.stringify(this.info)
+			}, (rtnData) => {
+
+			})
+		}
+	}
+})
+</script>

@@ -1,0 +1,52 @@
+<style>
+	.tag_box span:hover{text-decoration: line-through;cursor: pointer;color: #ccc;}
+</style>
+<template id="tag_view">
+	<div class="tag_box">
+		<span v-for="tag in tag_list" @click="del_tag(tag)">&nbsp;#{{tag}}&nbsp;</span>
+		<el-input prefix-icon="el-icon-edit" v-model="tag_info" placeholder="添加相关标签，用回车隔开" @keydown.native="do_key($event)"></el-input>
+	</div>
+</template>
+<script>
+	Vue.component('vincent-tag',{
+		template:'#tag_view',
+		data(){
+			return{
+				tag_info:'',
+				tag_list:[]
+			}
+		},
+		watch:{
+			// 观察一个属性的变化
+			tag_list:function(){
+				this.$emit('get_tag',this.tag_list);
+			}
+		},
+		methods:{
+			//添加标签
+			add_tag:function () {				
+				if(this.tag_info){
+					this.tag_list.push(this.tag_info);
+					this.tag_info='';
+				}
+			},
+			//键盘事件
+			do_key:function(event){
+				//console.log(event)
+				if (event.key == "Enter") {
+					this.add_tag()
+				}
+				else if (event.key == "Backspace") {					
+					if (this.tag_list.length>0) {
+						this.tag_list.pop();	
+					}
+				}
+			},
+			//删除标签
+			del_tag:function(tag){
+				var cur_tag_index=this.tag_list.indexOf(tag);
+				this.tag_list.splice(cur_tag_index,1);
+			}
+		}
+	})
+</script>

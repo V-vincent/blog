@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>评论demo</title>
+	<script type="text/javascript" src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<style>
+		*{margin: 0;padding: 0;}
+		li{list-style: none;}
+		.blog_list{width: 500px;margin: 10px auto;}
+		.blog_content{overflow: hidden;width: 100%;border: 1px #ccc solid;padding: 10px 15px;}
+		.blog_content p{float: left;}
+		.comment_btn{float: right;}
+		.comment_box{display: none;width: 100%;border: 1px #ccc solid;padding: 10px 15px;overflow: hidden;}
+		.show_comment{display: block;}
+		.comment_content{float: left;width: 85%;}
+		.comment_pub{float: right;}
+		.comment_list li{margin: 5px 0;}
+	</style>
+</head>
+<body>
+	<div id="comment_html">
+		<div class="left_box">
+			<ul>
+				<li v-for="(info,index) in blog_list" class="blog_list">
+					<!-- 微博内容 -->
+					<div class="blog_content">
+						<p class="">第{{index+1}}条{{info.name}}</p>
+						<el-button class="comment_btn" @click="show_comment_box(info)">评论</el-button>						
+					</div>
+					<!-- 评论弹出框 -->
+					<div class="comment_box" v-bind:class="{'show_comment':info.comment_open}" >
+						<el-input suffix-icon="el-icon-more" class="comment_content" v-model="info.temp_comment_content" @keyup.enter.native="send_comment(info)"></el-input>
+						<el-button type="success" class="comment_pub" @click="send_comment(info)">发布</el-button>
+ 						<!-- 评论的内容 -->
+					 	<ul class="comment_list">
+					 		<li v-for="comment in info.comment_list">
+					 			{{comment}}
+					 			<el-button @click="delete_comment(info,comment)" type="danger" >删除</el-button>
+					 		</li>
+					 	</ul>						
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+<script type="text/javascript">
+// 全局组件
+// 写new Vue的前面
+// 错误提醒、成功提醒、警告提醒
+// slot 插槽，接收自定义组件，盒子里面的内容或html节点
+// props  父组件的数据需要通过 prop 才能下发到子组件中
+Vue.component("smith-msg",{
+	props:['type','bb'],
+	template:"<div class='mag_box' :class='type'> {{bb}}<slot></slot></div>"
+})
+
+new Vue({
+	el: "#comment_html",
+	data: {
+		blog_list: [{
+			name: '第一条',
+			comment_open: false,
+			temp_comment_content: '', //临时微博内容
+			comment_list: []
+		}, {
+			name: '第二条',
+			comment_open: false,
+			temp_comment_content: '',
+			comment_list: []
+		}]
+	},
+	methods: {
+		//显示评论框
+		show_comment_box: function(info) {
+			info.comment_open = !info.comment_open;
+		},
+		//发布评论
+		send_comment: function(info) {
+			info.comment_list.push(info.temp_comment_content);
+			info.temp_comment_content = ''
+		},
+		//删除评论
+		delete_comment: function(info, comment) {
+			// 评论是哪一个微博的？
+			var cur_delete_comment_index = info.comment_list.indexOf(comment);
+			info.comment_list.splice(cur_delete_comment_index, 1)
+		}
+	}
+})
+</script>
+</body>
+</html>

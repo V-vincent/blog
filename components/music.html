@@ -1,0 +1,135 @@
+
+<style>
+.music_view{width: 100%;border: 1px solid #ccc;box-sizing: border-box;
+		padding: 15px;overflow: hidden;background: #fff;}
+.music_input{padding: 5px;}
+.search_list li:hover,.search_list li.active{background-color: #666;color: #fff}
+.footer_btn{margin-top: 20px;}
+.close_music{cursor: pointer;}
+</style>
+
+<template id="music_view">
+<div class="music_view">
+	<h3>&nbsp;这里是名字</h3>
+	<!-- 音乐初始界面 -->
+	<div class="music_search" v-if="no_choise">
+		<el-input  placeholder="请输入你要搜索的歌名" prefix-icon="el-icon-search" v-model="kwd" class="music_input" @keyup.enter.native="search_music($event)"  @keyup.down.native="down_choise()" @keyup.up.native="up_choise()"></el-input>
+		<!-- 搜索到的列表界面 -->
+		<ul class="search_list">
+			<li v-for="(music,index) in music_list" @click="choise(music)" @keyup.enter.native="enter_choise()" :class="{'active':index==choise_index}">{{music.name}}-{{music['artists'][0]['name']}}</li>
+		</ul>
+	</div>
+	<!-- 发布音乐 -->
+	<div class="music_pub" v-if="!no_choise">
+		<el-row>
+			<el-col :span="6">
+				<img :src="choise_music_info.blog_pict" alt="" style="width: 100%">
+			</el-col>
+			<el-col :span="15" :offset="1">
+				<audio :src="choise_music_info.blog_music_src" controls="true" ></audio>
+			</el-col>	
+			<el-col :span="2" @click.native="no_choise=true" class="close_music">
+				X
+			</el-col>					
+		</el-row>
+		<el-row>
+			<el-input type="textarea" v-model="choise_music_info.blog_content"></el-input>
+		</el-row>
+	</div>
+	<el-row class="footer_btn" v-show="!update_info">
+		<el-col :span="3">
+			<el-button @click.native="cancel()">取消</el-button>
+		</el-col>
+		<el-col :span="3" :offset="18">
+			<el-button type="success" @click.native="pub_music()">发布</el-button>
+		</el-col>
+	</el-row>
+</div>
+</template>
+<script>
+Vue.component('vincent-music',{
+	template:'#music_view',
+	props:["update_info"],	
+	data() {
+		return {
+			kwd: '', //关键词
+			music_list: [], //音乐列表
+			no_choise: true, //有没有选择
+			choise_music_info: {}, //当前选择的音乐
+			choise_index: -1
+		}
+	},
+	watch:{
+		update_info:function(){
+			this.init();
+		}
+	},
+	created(){
+		this.init();
+	},
+	methods: {
+		init: function() {
+			if (this.update_info) {
+				this.choise_music_info = this.update_info;
+				this.no_choise = false;
+			}
+		},
+		//搜索音乐
+		search_music: function(event) {
+			if (event.key == "ArrowDown" || event.key == "ArrowDown") {
+				return;
+			}
+			var music_word = this.kwd;
+			if (music_word) {
+				$.getJSON('http://s.music.163.com/search/get/?version=1&src=lofter&type=1&filterDj=false&s=' + music_word + '&limit=8&offset=0&callback=?', (rtnData) => {
+					// 拓展运算符 ...
+					this.music_list.push(...rtnData.result.songs)
+				})
+			}
+		},
+		//回车选择音乐
+		enter_choise: function() {
+			this.no_choise = false;
+			this.choise_music_info = this.music_list[this.choise_index];
+		},
+		//向下选择音乐
+		down_choise: function() {
+			if (this.choise_index == 7) {
+				this.choise_index = 0;
+			} else {
+				++this.choise_index
+			}
+
+		},
+		//向上选择音乐
+		up_choise: function() {
+			if (this.choise_index == 0) {
+				this.choise_index = 7;
+			} else {
+				--this.choise_index
+			}
+		},
+		//选择音乐
+		choise: function(music) {
+			this.no_choise = false;
+			this.choise_music_info.blog_pict = music.album.picUrl
+			this.choise_music_info.blog_music_src = music.audio
+		},
+		//点击取消事件
+		cancel: function() {
+			// 使用$emit触发父组件方法
+			this.$emit('cancel');
+			this.no_choise = true;
+			this.kwd = '';
+			this.music_list = [];
+		},
+		// 发布音乐
+		pub_music: function() {
+			this.$emit('pub_music', this.choise_music_info);
+			this.no_choise = true;
+			this.kwd = '';
+			this.music_list = [];
+		}
+	}
+})
+</script>
